@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import modelo.reservas_y_registro.Huesped;
+import modelo.reservas_y_registro.Cliente;
 import modelo.reservas_y_registro.Reserva;
 import modelo.servicios_y_consumo.Consumo;
 import modelo.servicios_y_consumo.Servicio;
@@ -53,13 +53,13 @@ public class BaseDatos implements Serializable {
 	}
 	
 
-	public void CrearArchivoHuespedes() throws IOException {
+	public void CrearArchivoClientees() throws IOException {
 		//crea archivo si no existe
-		File file = new File("./data/ArchivoHuespedes.txt");
+		File file = new File("./data/ArchivoClientes.txt");
 		if (file.createNewFile()) {
-			FileOutputStream fileOutputStream = new FileOutputStream("./data/ArchivoHuespedes.txt");
+			FileOutputStream fileOutputStream = new FileOutputStream("./data/ArchivoClientes.txt");
 			ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-			objectOutputStream.writeObject(new HashMap<Integer, Huesped>()); 
+			objectOutputStream.writeObject(new HashMap<Integer, Cliente>()); 
 			objectOutputStream.close();
 	}
 	}
@@ -115,7 +115,7 @@ public class BaseDatos implements Serializable {
 	
 	
 	public void GuardarObjeto (Object objeto) throws ClassNotFoundException, IOException {
-		//guarda huesped en archivo si no existe
+		//guarda Cliente en archivo si no existe
 		Class<?> clase = objeto.getClass();
 		if (clase.equals(Habitacion.class)){
 			Habitacion New = (Habitacion) objeto;
@@ -128,22 +128,22 @@ public class BaseDatos implements Serializable {
 		}
 		else if(clase.equals(Consumo.class)) {
 			Consumo New = (Consumo) objeto;
-			HashMap<Integer, ArrayList<Consumo>> huespedes = GetConsumos();
-			ArrayList<Consumo> listaconsumos = huespedes.get(New.GetNumero());
+			HashMap<Integer, ArrayList<Consumo>> clientes = GetConsumos();
+			ArrayList<Consumo> listaconsumos = clientes.get(New.GetNumero());
 			listaconsumos.add(New);
-			huespedes.put(New.GetNumero(), listaconsumos);
+			clientes.put(New.GetNumero(), listaconsumos);
 			FileOutputStream fileOutputStream = new FileOutputStream("./data/ArchivoConsumos.txt");
 			ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-			objectOutputStream.writeObject(huespedes); 
+			objectOutputStream.writeObject(clientes); 
 			objectOutputStream.close();
 		}
-		else if(clase.equals(Huesped.class)) {
-			Huesped New = (Huesped) objeto;
-			HashMap<Integer, Huesped> huespedes = GetHuespedes();
-			huespedes.put(New.getNumero(), New);
-			FileOutputStream fileOutputStream = new FileOutputStream("./data/ArchivoHuespedes.txt");
+		else if(clase.equals(Cliente.class)) {
+			Cliente New = (Cliente) objeto;
+			HashMap<Integer, Cliente> clientes = GetClientes();
+			clientes.put(New.getNumero(), New);
+			FileOutputStream fileOutputStream = new FileOutputStream("./data/ArchivoClientes.txt");
 			ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-			objectOutputStream.writeObject(huespedes); 
+			objectOutputStream.writeObject(clientes); 
 			objectOutputStream.close();
 		}
 		else if (clase.equals(Producto.class)) {
@@ -198,7 +198,7 @@ public class BaseDatos implements Serializable {
 	
 	
 	public HashMap<Integer, ArrayList<Consumo>> GetConsumos() throws IOException, ClassNotFoundException {
-		//busca los consumos por huesped si existen 
+		//busca los consumos por Cliente si existen 
 		FileInputStream fileInputStream = new FileInputStream("./data/ArchivoConsumos.txt");
 		ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
 		HashMap<Integer, ArrayList<Consumo>> consumos = (HashMap) objectInputStream.readObject();
@@ -218,13 +218,13 @@ public class BaseDatos implements Serializable {
 	}
 	
 	
-		public HashMap<Integer, Huesped> GetHuespedes () throws IOException, ClassNotFoundException {
-		//busca la informacion de los huespedes si existe
-		FileInputStream fileInputStream = new FileInputStream("./data/ArchivoHuespedes.txt");
+		public HashMap<Integer, Cliente> GetClientes () throws IOException, ClassNotFoundException {
+		//busca la informacion de los Clientes si existe
+		FileInputStream fileInputStream = new FileInputStream("./data/ArchivoClientes.txt");
 		ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-		HashMap<Integer, Huesped> huespedes = (HashMap) objectInputStream.readObject();
+		HashMap<Integer, Cliente> clientes = (HashMap) objectInputStream.readObject();
 		objectInputStream.close();
-		return huespedes;
+		return clientes;
 	}		
 		
 	
@@ -279,13 +279,13 @@ public class BaseDatos implements Serializable {
 			objectOutputStream.writeObject(consumos); 
 			objectOutputStream.close();
 		}
-		else if (clase.equals(Huesped.class)) {
+		else if (clase.equals(Cliente.class)) {
 			int numeroHabitacion = (int) objeto;
-			HashMap<Integer, Huesped> huespedes = GetHuespedes();
-			huespedes.remove(numeroHabitacion);
-			FileOutputStream fileOutputStream = new FileOutputStream("./data/ArchivoHuespedes.txt");
+			HashMap<Integer, Cliente> clientes = GetClientes();
+			clientes.remove(numeroHabitacion);
+			FileOutputStream fileOutputStream = new FileOutputStream("./data/ArchivoClientes.txt");
 			ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-			objectOutputStream.writeObject(huespedes); 
+			objectOutputStream.writeObject(clientes); 
 			objectOutputStream.close();	
 		}
 		else if (clase.equals(Producto.class)) {

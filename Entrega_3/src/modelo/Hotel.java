@@ -1,4 +1,4 @@
-	package modelo;
+package modelo;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -7,7 +7,7 @@ import java.util.HashMap;
 
 import modelo.inventario_y_BD.BaseDatos;
 import modelo.inventario_y_BD.Habitacion;
-import modelo.reservas_y_registro.Huesped;
+import modelo.reservas_y_registro.Cliente;
 import modelo.servicios_y_consumo.Consumo;
 
 public class Hotel implements Serializable{
@@ -16,7 +16,7 @@ public class Hotel implements Serializable{
 	
 	private HashMap<String, String> Usuarios;
 	
-	private ArrayList<Huesped> Huespedes;
+	private ArrayList<Cliente> Clientes;
 	
 	private HashMap<Integer, ArrayList<Consumo>> Consumos;
 	
@@ -26,7 +26,7 @@ public class Hotel implements Serializable{
 	public Hotel() {
 		this.Inventario = null;
 		this.Usuarios = null;
-		this.Huespedes = null;
+		this.Clientes = null;
 		this.Consumos = null;
 		this.Administrador_BD = new BaseDatos();
 	}
@@ -40,7 +40,7 @@ public class Hotel implements Serializable{
 		//Cargar archivo binario
 	}
 	
-	public void setHuespedes(){
+	public void setClientes(){
 		//Cargar archivo binario
 	}
 	
@@ -65,8 +65,8 @@ public class Hotel implements Serializable{
 		return Administrador_BD.GetUsuarios();
 	}
 	
-	public HashMap<Integer, Huesped> getHuespedes() throws ClassNotFoundException, IOException{
-		return Administrador_BD.GetHuespedes();
+	public HashMap<Integer, Cliente> getClientes() throws ClassNotFoundException, IOException{
+		return Administrador_BD.GetClientes();
 	}
 	
 	public void getConsumos(){
