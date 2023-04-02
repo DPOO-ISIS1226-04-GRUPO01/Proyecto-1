@@ -118,7 +118,7 @@ public class vista {
 					if (tipo == "Administrador")
 						administrador();
 					else if(tipo == "Recepcionista")
-						System.out.print("opción en proceso");
+						recepcionista();
 					else if (tipo == "Empleado") {
 						empleado();
 					}
@@ -156,8 +156,8 @@ public class vista {
 		
 		
 	}
-	public void administrador() throws IOException, ClassNotFoundException {
-		System.out.println("Interfaz de Administrador");
+	public void recepcionista() throws IOException, ClassNotFoundException {
+		System.out.println("Interfaz de Recepcionista");
 		this.infoHotel = new Hotel();
 	
 
@@ -170,7 +170,7 @@ public class vista {
 		{
 			try
 			{
-				mostrarMenu_admin();
+				mostrarMenu_recepcinista();
 				//obtener_consumo(505);
 				int opcion_seleccionada = Integer.parseInt(input("Por favor selecciona una opción"));
 				if (opcion_seleccionada == 1)
@@ -197,7 +197,7 @@ public class vista {
 		
 		
 	}
-	public void empleado() throws IOException, ClassNotFoundException {
+	public void administrador() throws IOException, ClassNotFoundException {
 		System.out.println("Interfaz de Administrador");
 		this.infoHotel = new Hotel();
 	
@@ -211,7 +211,7 @@ public class vista {
 		{
 			try
 			{
-				mostrarMenu_empleado();
+				mostrarMenu_admin();
 				//obtener_consumo(505);
 				int opcion_seleccionada = Integer.parseInt(input("Por favor selecciona una opción"));
 				if (opcion_seleccionada == 1)
@@ -244,7 +244,44 @@ public class vista {
 		
 	}	
 	
+	public void empleado() throws IOException, ClassNotFoundException {
+		System.out.println("Interfaz de Empleado ");
+		this.infoHotel = new Hotel();
 	
+
+
+		CrearArchivos();
+		String ruta = new String("C://Users//Juan Esteban//Desktop//ANDES//2023-10//DPO//PMS//data/");
+		
+ 		boolean continuar = true;
+		while (continuar)
+		{
+			try
+			{
+				mostrarMenu_empleado();
+				//obtener_consumo(505);
+				int opcion_seleccionada = Integer.parseInt(input("Por favor selecciona una opción"));
+				if (opcion_seleccionada == 1)
+					modificar_consumo();
+
+				else if (opcion_seleccionada == 2)
+				{
+					System.out.println("Saliendo de la aplicación ...");
+					continuar = false;
+				}else
+				{
+					System.out.println("Por favor seleccione una opción válida.");
+				}
+			}
+			catch (NumberFormatException e)
+			{
+				System.out.println("Debe seleccionar uno de los números de las opciones.");
+			}
+		}
+		
+		
+		
+	}
 	public String input(String mensaje)
 	{
 		try
@@ -491,22 +528,29 @@ public class vista {
 		{
 			System.out.println("\nOpciones de la aplicación\n");
 			
-			System.out.println("1. Abrir un registro de Consumo");
-			System.out.println("2. Modificar un registro de Consumo");
-			System.out.println("3. Eliminar un registro de Consumo");
-			System.out.println("4. Salir de la aplicación\n");
-		
-		}
-		public void mostrarMenu_empleado()
-		{
-			System.out.println("\nOpciones de la aplicación\n");
-			
 			System.out.println("1. Crear Servicio");
 			System.out.println("2. Editar Tarifa de un Servicio");
 			System.out.println("3. Crear Producto del Menú");
 			System.out.println("4. Editar Tarifa de un producto del Menú");
 			System.out.println("5. Eliminar un servicio o producto");
 			System.out.println("6. Salir de la aplicación\n");
+		
+		}
+		public void mostrarMenu_empleado()
+		{
+			System.out.println("\nOpciones de la aplicación\n");
+			
+			System.out.println("1. Modificar un registro de Consumo");
+			System.out.println("2. Salir de la aplicación\n");
+		}
+		public void mostrarMenu_recepcinista()
+		{
+			System.out.println("\nOpciones de la aplicación\n");
+			
+			System.out.println("1. Abrir un registro de Consumo");
+			System.out.println("2. Modificar un registro de Consumo");
+			System.out.println("3. Eliminar un registro de Consumo");
+			System.out.println("4. Salir de la aplicación\n");
 		}
 		
 		public void mostrarMenu_Usuarios()
