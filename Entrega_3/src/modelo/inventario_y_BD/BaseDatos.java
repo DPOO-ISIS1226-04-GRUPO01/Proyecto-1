@@ -8,7 +8,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Date;
+import java.util.Calendar;
 
 import modelo.reservas_y_registro.Cliente;
 import modelo.reservas_y_registro.Reserva;
@@ -18,7 +23,7 @@ import modelo.servicios_y_consumo.Producto;
 
 public class BaseDatos implements Serializable {
 	
-	 
+	private static final long MILLIS_IN_A_DAY = 1000 * 60 * 60 * 24;
 	
 	
 	public BaseDatos() {
@@ -53,7 +58,7 @@ public class BaseDatos implements Serializable {
 	}
 	
 
-	public void CrearArchivoClientees() throws IOException {
+	public void CrearArchivoClientes() throws IOException {
 		//crea archivo si no existe
 		File file = new File("./data/ArchivoClientes.txt");
 		if (file.createNewFile()) {
@@ -82,7 +87,7 @@ public class BaseDatos implements Serializable {
 		if (file.createNewFile()) {
 			FileOutputStream fileOutputStream = new FileOutputStream("./data/ArchivoReservas.txt");
 			ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-			objectOutputStream.writeObject(new HashMap<Integer, Reserva>()); 
+			objectOutputStream.writeObject(new HashMap<Date, Reserva>()); 
 			objectOutputStream.close();
 		}
 	}
@@ -105,6 +110,30 @@ public class BaseDatos implements Serializable {
 			FileOutputStream fileOutputStream = new FileOutputStream("./data/ArchivoMenu.txt");
 			ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
 			objectOutputStream.writeObject(new HashMap<String, Producto>()); 
+			objectOutputStream.close();
+		}
+	}
+	
+	// Métodos creación archivos reservas y registro
+	
+	public void CrearArchivoOcupacion() throws IOException {
+		//crea archivo si no existe
+		File file = new File("./data/ArchivoOcupacion.txt");
+		if (file.createNewFile()) {
+			FileOutputStream fileOutputStream = new FileOutputStream("./data/ArchivoOcupacion.txt");
+			ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+			objectOutputStream.writeObject(new HashMap<Date, ArrayList<Integer> >()); 
+			objectOutputStream.close();
+		}
+	}
+	
+	public void CrearArchivoTarifa() throws IOException {
+		//crea archivo si no existe
+		File file = new File("./data/ArchivoTarifa.txt");
+		if (file.createNewFile()) {
+			FileOutputStream fileOutputStream = new FileOutputStream("./data/ArchivoTarifa.txt");
+			ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+			objectOutputStream.writeObject(new ArrayList<HashMap<Date, Integer>>()); 
 			objectOutputStream.close();
 		}
 	}
@@ -157,12 +186,82 @@ public class BaseDatos implements Serializable {
 		}
 		else if (clase.equals(Reserva.class)) {
 			Reserva New = (Reserva) objeto;
-			HashMap<Integer, Reserva> reservas = GetReservas();
-			reservas.put(New.getNumeroHabitacion() , New);
+			HashMap<Date, Reserva> reservas = GetReservas();
+			reservas.put(New.getId_reserva() , New);
 			FileOutputStream fileOutputStream = new FileOutputStream("./data/ArchivoReservas.txt");
 			ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
 			objectOutputStream.writeObject(reservas); 
 			objectOutputStream.close();
+			
+			
+			// Modificar archivo ocupaciones
+			
+			HashMap<Date, ArrayList<Integer> > Mapa_Ocupacion = GetOcupacion();
+			HashMap<Integer, Habitacion> Mapa_Inventario = GetInventario();
+
+			//archvo habitaciones
+			Date fecha_final = New.getFecha_Final();
+			Date iterador_fecha = New.getFecha_Inicio();
+			
+			
+			
+			// agregar id_habitacion a ocupadas en las fechas de la reserva
+			
+			while (iterador_fecha.compareTo(fecha_final) < 0 || iterador_fecha.compareTo(fecha_final)==0) {
+			  
+			// si la fecha no existe
+			if(Mapa_Ocupacion.get(iterador_fecha) == null) {
+
+				ArrayList<Integer> Lista_Habitaciones_Desocupadas = new ArrayList<>(Mapa_Inventario.keySet());			
+				
+				ArrayList<Integer> Habitaciones = New.getHabitaciones();
+				
+				for(int i = 0; i < Habitaciones.size(); i++) {
+					Lista_Habitaciones_Desocupadas.remove(Habitaciones.get(i));
+					Habitacion habitacion = Mapa_Inventario.get(Habitaciones.get(i));
+					habitacion.Actualizar_fechas_ocupacion(New.getFecha_Inicio(), New.getFecha_Final(), New.getId_reserva());
+					Mapa_Inventario.put(Habitaciones.get(i),habitacion);
+				}
+				
+				Mapa_Ocupacion.put(iterador_fecha, Lista_Habitaciones_Desocupadas);
+			}
+			
+			// si la fecha ya existe
+			else {
+				ArrayList<Integer> Lista_Habitaciones_Desocupadas = Mapa_Ocupacion.get(iterador_fecha);
+				
+				ArrayList<Integer> Habitaciones = New.getHabitaciones();
+				
+				for(int i = 0; i < Habitaciones.size(); i++) {
+					Lista_Habitaciones_Desocupadas.remove(Habitaciones.get(i));
+					Habitacion habitacion = Mapa_Inventario.get(Habitaciones.get(i));
+					habitacion.Actualizar_fechas_ocupacion(New.getFecha_Inicio(), New.getFecha_Final(), New.getId_reserva());
+					Mapa_Inventario.put(Habitaciones.get(i),habitacion);
+				}
+				
+				Mapa_Ocupacion.put(iterador_fecha , Lista_Habitaciones_Desocupadas);							
+			
+			}
+			
+			// escribir sobre el archivo ocupacion
+			
+			FileOutputStream fileOutputStream1 = new FileOutputStream("./data/ArchivoOcupacion.txt");
+			ObjectOutputStream objectOutputStream1 = new ObjectOutputStream(fileOutputStream1);
+			objectOutputStream1.writeObject(Mapa_Ocupacion); 
+			objectOutputStream1.close();
+			
+			//escribir sobre el archivo inventario
+			
+			FileOutputStream fileOutputStream2 = new FileOutputStream("./data/ArchivoInventario.txt");
+			ObjectOutputStream objectOutputStream2 = new ObjectOutputStream(fileOutputStream2);
+			objectOutputStream2.writeObject(Mapa_Inventario); 
+			objectOutputStream2.close();
+
+			// avance
+			  iterador_fecha = getNextDay(iterador_fecha);
+			}
+				
+			
 		}
 		else if (clase.equals(Servicio.class)) {
 			Servicio New = (Servicio) objeto;
@@ -173,6 +272,66 @@ public class BaseDatos implements Serializable {
 			objectOutputStream.writeObject(servicios); 
 			objectOutputStream.close();
 		}
+		else if (clase.equals(Tarifa.class)){
+			Tarifa New = (Tarifa) objeto;
+			ArrayList<HashMap<Date, Integer>> tarifas = GetTarifa();
+			
+			if (tarifas.size() == 0) {
+				HashMap<Date, Integer> mapa_precio = new HashMap<Date, Integer>();
+				tarifas.add(mapa_precio);
+				tarifas.add(mapa_precio);
+				tarifas.add(mapa_precio);	
+				
+			}
+			
+			Date fecha_final = New.getfecha_final();
+			Date iterador_fecha = New.getfecha_inicio();
+			
+			int index = -1;
+			
+			if (New.gettipo() == "Estadar") {
+				index = 0;
+			} else if (New.gettipo() == "Suite") {
+				index = 1;
+			} else if (New.gettipo() == "Suite doble") {
+				index = 2;
+			}
+			
+			int precio = New.getprecio();
+			ArrayList<Integer> dias = New.getdias_de_la_semana();
+			
+			Calendar cal = Calendar.getInstance();
+			
+			
+			while (iterador_fecha.compareTo(fecha_final) < 0 || iterador_fecha.compareTo(fecha_final)==0) {
+				// si la fecha no existe
+				cal.setTime(iterador_fecha);	
+				if ( dias.contains(cal.get(Calendar.DAY_OF_WEEK))) {
+				
+					HashMap<Date, Integer> MapaTarifas = tarifas.get(index);
+				
+				if(MapaTarifas.get(iterador_fecha) == null) {
+					MapaTarifas.put(iterador_fecha, precio);
+					
+				} else {
+					int precio_actual = MapaTarifas.get(iterador_fecha);
+					
+					if (precio_actual > precio) {
+						MapaTarifas.put(iterador_fecha, precio);}}
+				}
+				iterador_fecha = getNextDay(iterador_fecha);
+			
+			}	
+			
+			
+			
+			
+			
+			FileOutputStream fileOutputStream = new FileOutputStream("./data/ArchivoTarifa.txt");
+			ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+			objectOutputStream.writeObject(tarifas); 
+			objectOutputStream.close();
+			}
 
 		
 	}
@@ -209,10 +368,10 @@ public class BaseDatos implements Serializable {
 	
 	// Funciones para obtener informacion de archivos SISTEMA DE RESERVAS Y REGISTRO
 		
-	public HashMap<Integer, Reserva> GetReservas() throws IOException, ClassNotFoundException{
+	public HashMap<Date, Reserva> GetReservas() throws IOException, ClassNotFoundException{
 		FileInputStream fileInputStream = new FileInputStream("./data/ArchivoReservas.txt");
 		ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-		HashMap<Integer, Reserva> reservas = (HashMap) objectInputStream.readObject();
+		HashMap<Date, Reserva> reservas = (HashMap) objectInputStream.readObject();
 		objectInputStream.close();
 		return reservas;
 	}
@@ -227,6 +386,14 @@ public class BaseDatos implements Serializable {
 		return clientes;
 	}		
 		
+		public HashMap<Date, ArrayList<Integer> > GetOcupacion () throws IOException, ClassNotFoundException {
+			//busca la informacion de la Ocupacin si existe
+			FileInputStream fileInputStream = new FileInputStream("./data/ArchivoOcupacion.txt");
+			ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+			HashMap<Date, ArrayList<Integer> > ocupacion = (HashMap) objectInputStream.readObject();
+			objectInputStream.close();
+			return ocupacion;
+		}
 	
 	// Funciones para obtener informacion de archivos ADMINISTRADOR DE USUARIOS
 	
@@ -255,6 +422,14 @@ public class BaseDatos implements Serializable {
 		HashMap<String, Producto> menu = (HashMap) objectInputStream.readObject();
 		objectInputStream.close();
 		return menu;
+	}
+	
+	public  ArrayList<HashMap<Date, Integer>> GetTarifa() throws IOException, ClassNotFoundException{
+		FileInputStream fileInputStream = new FileInputStream("./data/ArchivoTarifa.txt");
+		ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+		ArrayList<HashMap<Date, Integer>> tarifa = (ArrayList) objectInputStream.readObject();
+		objectInputStream.close();
+		return tarifa;
 	}
 	
 
@@ -298,9 +473,9 @@ public class BaseDatos implements Serializable {
 			objectOutputStream.close();
 		}
 		else if (clase.equals(Reserva.class)) {
-			int numeroHabitacion = (int) objeto;
-			HashMap<Integer, Reserva> reservas = GetReservas();
-			reservas.remove(numeroHabitacion);
+			Date id_Reserva = (Date) objeto;
+			HashMap<Date, Reserva> reservas = GetReservas();
+			reservas.remove(id_Reserva);
 			FileOutputStream fileOutputStream = new FileOutputStream("./data/ArchivoReservas.txt");
 			ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
 			objectOutputStream.writeObject(reservas); 
@@ -343,6 +518,12 @@ public class BaseDatos implements Serializable {
 		GuardarObjeto(producto);
 	}
 	
+	private static Date getNextDay(Date date)
+	{
+	  return new Date(date.getTime() + MILLIS_IN_A_DAY);
+	}
+	
+
 		
 	
 	

@@ -1,19 +1,60 @@
 package modelo.reservas_y_registro;
 
-public class Reserva {
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+
+import modelo.inventario_y_BD.BaseDatos;
+import modelo.inventario_y_BD.Habitacion;
+import java.util.Random;
+
+
+
+public class Reserva implements Serializable{
 	
-	private int NumeroHabitacion;
+	private ArrayList<Integer> Habitaciones;
 	
 	private String NombreHuesped;
 	
+	private Date Fecha_Inicio;
 	
-	public Reserva(int numero, String nombre) {
-		this.NumeroHabitacion = numero;
-		this.NombreHuesped = nombre;
+	private Date Fecha_Final;
+	
+	private Date Id_reserva;
+	
+	public Reserva(String nombre_huesped, Date Fecha_Inicio, Date Fecha_Final, Date id_reserva, BaseDatos BD) {
+		this.NombreHuesped = nombre_huesped;
+		this.Fecha_Inicio = Fecha_Inicio;
+		this.Fecha_Final = Fecha_Final;
+		this.Id_reserva = id_reserva;
+		
 	}
+	
 
 	
-	public int getNumeroHabitacion() {
-		return NumeroHabitacion;
+	public ArrayList<Integer> getHabitaciones() {
+		return Habitaciones;
+	}
+	
+	public String getNombreHuesped() {
+		return NombreHuesped;
+	}
+	public Date getFecha_Inicio() {
+		return Fecha_Inicio;
+	}
+	
+	public Date getFecha_Final() {
+		return Fecha_Final;
+	}
+	
+	public Date getId_reserva() {
+		return Id_reserva;
+	}
+	
+	public void setHabitaciones(Date Fecha_Inicio, Date Fecha_Final, HashMap<Date, ArrayList<Integer> > Mapa_Ocupacion) throws ClassNotFoundException, IOException {
+		
+		
 	}
 }

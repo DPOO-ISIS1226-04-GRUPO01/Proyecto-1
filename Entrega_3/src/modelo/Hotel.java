@@ -3,11 +3,13 @@ package modelo;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import modelo.inventario_y_BD.BaseDatos;
 import modelo.inventario_y_BD.Habitacion;
 import modelo.reservas_y_registro.Cliente;
+import modelo.reservas_y_registro.Reserva;
 import modelo.servicios_y_consumo.Consumo;
 
 public class Hotel implements Serializable{
@@ -61,6 +63,10 @@ public class Hotel implements Serializable{
 		return Administrador_BD.GetInventario();
 	}
 	
+	public HashMap<Date, Reserva> getReservas() throws ClassNotFoundException, IOException{
+		return Administrador_BD.GetReservas();
+	}
+	
 	public HashMap<String, String> getUsuarios(){
 		return Administrador_BD.GetUsuarios();
 	}
@@ -80,7 +86,7 @@ public class Hotel implements Serializable{
 	
 	public void crearHabitacion(int precio, int numero) throws IOException, ClassNotFoundException
 	{
-		Habitacion objeto = new Habitacion(precio, numero);
+		Habitacion objeto = new Habitacion(precio, numero, 23);
 		
 	}
 	
@@ -90,9 +96,14 @@ public class Hotel implements Serializable{
 		
 	}
 	
+	public void eliminarReserva(long numeroReserva) throws ClassNotFoundException, IOException {
+		Class<Reserva> clase = Reserva.class;
+		Administrador_BD.EliminarObjeto(numeroReserva, clase);
+		
+	}
 	
-	public void GuardarrObjeto(int precio, int numero) throws ClassNotFoundException, IOException {
-		Habitacion objeto = new Habitacion(precio, numero);
+	
+	public void GuardarrObjeto(Object objeto) throws ClassNotFoundException, IOException {
 		Administrador_BD.GuardarObjeto(objeto);
 	}
 	
