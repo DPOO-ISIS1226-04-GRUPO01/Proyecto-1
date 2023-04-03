@@ -3,9 +3,11 @@ package consola;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 
 import modelo.BaseDatos;
@@ -15,6 +17,7 @@ import modelo.Hotel;
 import modelo.Huesped;
 import modelo.Producto;
 import modelo.Servicio;
+import modelo.Sistema_Reservas_y_Registro;
 
 
 
@@ -138,7 +141,26 @@ public class vista {
 					else
 						System.out.print("El usuario digitado no existe en el sistema");
 				}
-				else if (opcion_seleccionada == 4)
+				
+				else if (opcion_seleccionada == 4) {
+					String nombre = input("Ingrese nombre Huesped");
+					int num_huesped = Integer.parseInt(("Ingrese numero huespedes"));
+					String fecha_inicial_raw = input("Ingrese fecha inicial en formato yyyy-MM-dd");
+					Date fecha_inicial =new SimpleDateFormat("yyyy-MM-dd").parse(fecha_inicial_raw); 
+					
+					String fecha_final_raw = input("Ingrese fecha final en formato yyyy-MM-dd");
+					Date fecha_final = new SimpleDateFormat("yyyy-MM-dd").parse(fecha_inicial_raw); 
+					
+					Date date = new Date();
+					
+					Sistema_Reservas_y_Registro.Crear_reserva(201, new Cliente(nombre,0), fecha_inicial, fecha_final_raw, date, infoHotel.getBD());
+
+
+					System.out.print("Reserva exitosa");
+
+				}
+				
+				else if (opcion_seleccionada == 5)
 				{
 					System.out.println("Saliendo de la aplicación ...");
 					continuar = false;
@@ -546,11 +568,11 @@ public class vista {
 		public void mostrarMenu_recepcinista()
 		{
 			System.out.println("\nOpciones de la aplicación\n");
-			
 			System.out.println("1. Abrir un registro de Consumo");
 			System.out.println("2. Modificar un registro de Consumo");
 			System.out.println("3. Eliminar un registro de Consumo");
-			System.out.println("4. Salir de la aplicación\n");
+			System.out.println("4. Hacer reserva");
+			System.out.println("5. Salir de la aplicación\n");
 		}
 		
 		public void mostrarMenu_Usuarios()
@@ -564,3 +586,17 @@ public class vista {
 			
 		}
 }
+Footer
+© 2023 GitHub, Inc.
+Footer navigation
+Terms
+Privacy
+Security
+Status
+Docs
+Contact GitHub
+Pricing
+API
+Training
+Blog
+About
