@@ -1,4 +1,4 @@
-package modelo.inventario_y_BD;
+package modelo;
 
 import java.io.Serializable;
 import java.util.*;
@@ -17,6 +17,8 @@ public class Habitacion implements Serializable{
 	// de ocupacion y en el ultimo elemento es el id_de la reserva
 	
 	private LinkedList<ArrayList<Date>> Fechas_Ocupacion;
+	
+	private int PrecioHabitacion;
 	
 	
 	public Habitacion(int Precio, int Numero, int Capacidad_personas) {
@@ -127,9 +129,9 @@ public class Habitacion implements Serializable{
 		
 	}
 	
-	public int getprecio(Date) {
-		
-	}
+
+	
+	
 	
 	
 	

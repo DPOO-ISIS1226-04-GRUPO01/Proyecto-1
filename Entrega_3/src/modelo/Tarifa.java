@@ -1,4 +1,4 @@
-package modelo.inventario_y_BD;
+package modelo;
 
 import java.util.ArrayList;
 import java.util.Date;

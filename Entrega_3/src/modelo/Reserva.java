@@ -1,13 +1,10 @@
-package modelo.reservas_y_registro;
+package modelo;
 
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-
-import modelo.inventario_y_BD.BaseDatos;
-import modelo.inventario_y_BD.Habitacion;
 import java.util.Random;
 
 
@@ -16,7 +13,7 @@ public class Reserva implements Serializable{
 	
 	private ArrayList<Integer> Habitaciones;
 	
-	private String NombreHuesped;
+	private Cliente Huesped;
 	
 	private Date Fecha_Inicio;
 	
@@ -24,8 +21,11 @@ public class Reserva implements Serializable{
 	
 	private Date Id_reserva;
 	
-	public Reserva(String nombre_huesped, Date Fecha_Inicio, Date Fecha_Final, Date id_reserva, BaseDatos BD) {
-		this.NombreHuesped = nombre_huesped;
+	private int Id_habitacion; 
+	
+	public Reserva(int id_habitacion, Cliente Huesped, Date Fecha_Inicio, Date Fecha_Final, Date id_reserva) {
+		this.Id_habitacion = id_habitacion;
+		this.Huesped = Huesped;
 		this.Fecha_Inicio = Fecha_Inicio;
 		this.Fecha_Final = Fecha_Final;
 		this.Id_reserva = id_reserva;
@@ -38,8 +38,8 @@ public class Reserva implements Serializable{
 		return Habitaciones;
 	}
 	
-	public String getNombreHuesped() {
-		return NombreHuesped;
+	public Cliente getNombreHuesped() {
+		return Huesped;
 	}
 	public Date getFecha_Inicio() {
 		return Fecha_Inicio;
@@ -53,8 +53,4 @@ public class Reserva implements Serializable{
 		return Id_reserva;
 	}
 	
-	public void setHabitaciones(Date Fecha_Inicio, Date Fecha_Final, HashMap<Date, ArrayList<Integer> > Mapa_Ocupacion) throws ClassNotFoundException, IOException {
-		
-		
-	}
 }

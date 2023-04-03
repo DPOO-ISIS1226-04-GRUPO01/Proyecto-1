@@ -8,15 +8,14 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;  
-import java.util.Date;  
+import java.util.Date;
 
-
-import modelo.inventario_y_BD.BaseDatos;
-import modelo.inventario_y_BD.Habitacion;
+import modelo.BaseDatos;
+import modelo.Cliente;
+import modelo.Habitacion;
 import modelo.Hotel;
-import modelo.reservas_y_registro.Cliente;
-import modelo.reservas_y_registro.Reserva;
-import modelo.reservas_y_registro.Sistema_Reservas_y_Registro;
+import modelo.Reserva;
+import modelo.Sistema_Reservas_y_Registro;
 
 
 

@@ -1,4 +1,4 @@
-package modelo.inventario_y_BD;
+package modelo;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,11 +15,7 @@ import java.util.LinkedList;
 import java.util.Date;
 import java.util.Calendar;
 
-import modelo.reservas_y_registro.Cliente;
-import modelo.reservas_y_registro.Reserva;
-import modelo.servicios_y_consumo.Consumo;
-import modelo.servicios_y_consumo.Servicio;
-import modelo.servicios_y_consumo.Producto;
+
 
 public class BaseDatos implements Serializable {
 	

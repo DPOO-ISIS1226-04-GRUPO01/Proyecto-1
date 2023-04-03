@@ -6,12 +6,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-import modelo.inventario_y_BD.BaseDatos;
-import modelo.inventario_y_BD.Habitacion;
-import modelo.reservas_y_registro.Cliente;
-import modelo.reservas_y_registro.Reserva;
-import modelo.servicios_y_consumo.Consumo;
-
 public class Hotel implements Serializable{
 
 	private HashMap<Integer, Habitacion> Inventario; 

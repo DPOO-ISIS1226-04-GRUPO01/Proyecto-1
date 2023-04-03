@@ -1,4 +1,4 @@
-package modelo.reservas_y_registro;
+package modelo;
 
 import java.io.Serializable;
 

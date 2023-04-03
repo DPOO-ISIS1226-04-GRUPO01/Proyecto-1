@@ -1,4 +1,4 @@
-package modelo.servicios_y_consumo;
+package modelo;
 
 import java.io.Serializable;
 
